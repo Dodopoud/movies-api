@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record MovieRequest(@NotBlank @Size (max = 50)String title, 
-                           @NotBlank String genre, 
+                           @NotBlank @Size (max = 50) String genre, 
                            @DecimalMin("0.0") @DecimalMax("10.0")double rating, 
                            @Min(1880) int releaseYear) {
 
