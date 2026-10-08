@@ -18,6 +18,8 @@ import com.dimitra.movies.dto.MovieResponse;
 import com.dimitra.movies.entity.Movie;
 import com.dimitra.movies.service.MovieService;
 
+import jakarta.validation.Valid;
+
 @RestController
 public class MovieController {
     private final MovieService movieService;
@@ -51,13 +53,13 @@ public class MovieController {
     }
 
     @PostMapping("/movies")
-    public ResponseEntity<MovieResponse> createMovie(@RequestBody MovieRequest request){
+    public ResponseEntity<MovieResponse> createMovie(@Valid @RequestBody MovieRequest request){
         Movie saved = movieService.createMovie(request); 
         return ResponseEntity.status(HttpStatus.CREATED).body(MovieResponse.from(saved));
     }
 
     @PutMapping("/movies/{id}")
-    public ResponseEntity<MovieResponse> updateMovie(@PathVariable Long id, @RequestBody MovieRequest request){
+    public ResponseEntity<MovieResponse> updateMovie(@PathVariable Long id, @Valid @RequestBody MovieRequest request){
         
         Movie updated = movieService.updateMovie(id, request);
         if (updated == null){
