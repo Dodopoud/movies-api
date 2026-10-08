@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.dimitra.movies.dto.MovieRequest;
 import com.dimitra.movies.entity.Movie;
+import com.dimitra.movies.exception.MovieNotFoundException;
 import com.dimitra.movies.repository.MovieRepository;
 
 @Service
@@ -18,7 +19,7 @@ public class MovieService {
     }
 
     public Movie findById(Long id){
-        return  movieRepository.findById(id).orElse(null);
+        return  movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
         
     }
 
@@ -41,12 +42,11 @@ public class MovieService {
         }
     }
 
-    public boolean deleteMovieById(Long id){
-        if(!movieRepository.existsById(id)){
-            return false;
-        }
-        movieRepository.deleteById(id);
-        return true;
+    public void deleteMovieById(Long id){
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
+        
+        movieRepository.delete(movie);
+       
     }
 
     public Movie createMovie(MovieRequest request){
@@ -59,11 +59,8 @@ public class MovieService {
     }
 
     public Movie updateMovie(Long id, MovieRequest request){
-        Movie movie = movieRepository.findById(id).orElse(null);
-        if (movie == null){
-            return null;
-        }
-
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
+        
         movie.setTitle(request.title());
         movie.setGenre(request.genre());
         movie.setRating(request.rating());
