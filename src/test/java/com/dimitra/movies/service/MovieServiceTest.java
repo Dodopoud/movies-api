@@ -1,17 +1,18 @@
 package com.dimitra.movies.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.dimitra.movies.entity.Movie;
+import com.dimitra.movies.exception.MovieNotFoundException;
 import com.dimitra.movies.repository.MovieRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,5 +39,16 @@ class MovieServiceTest {
 
         //Then
         assertThat(result.getTitle()).isEqualTo("Titanic");
+    }
+
+    @Test
+    void findById_whenMovieNotExists_throwsException(){
+        //Given
+        when(movieRepository.findById(999L)).thenReturn(Optional.empty());
+
+        //When + Then
+        assertThatThrownBy(() -> movieService.findById(999L))
+        .isInstanceOf(MovieNotFoundException.class);
+
     }
 }
