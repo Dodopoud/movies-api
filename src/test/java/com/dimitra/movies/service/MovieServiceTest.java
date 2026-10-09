@@ -10,10 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import static org.mockito.Mockito.verify;
 import com.dimitra.movies.entity.Movie;
 import com.dimitra.movies.exception.MovieNotFoundException;
 import com.dimitra.movies.repository.MovieRepository;
+import com.dimitra.movies.dto.MovieRequest;
 
 @ExtendWith(MockitoExtension.class)
 class MovieServiceTest {
@@ -48,7 +49,60 @@ class MovieServiceTest {
 
         //When + Then
         assertThatThrownBy(() -> movieService.findById(999L))
-        .isInstanceOf(MovieNotFoundException.class);
+                                             .isInstanceOf(MovieNotFoundException.class);
 
     }
+
+    @Test
+    void deleteMovieById_whenMovieExists_deletesMovie(){
+        //Given
+        Movie movie = new Movie("Titanic", "Drama", 7.9, 1997);
+        when(movieRepository.findById(1L)).thenReturn(Optional.of(movie));
+
+        //When
+        movieService.deleteMovieById(1L);
+
+        //Then
+        verify(movieRepository).delete(movie);
+    }
+
+    @Test 
+    void deleteMovieById_whenMovieNotExists_throwsException(){
+        //Given
+        when(movieRepository.findById(999L)).thenReturn(Optional.empty());
+
+        //When + Then
+        assertThatThrownBy(() -> movieService.deleteMovieById(999L))
+                                              .isInstanceOf(MovieNotFoundException.class);
+    }
+
+    @Test
+    void updateMovie_whenMovieExists_updatesMovie(){
+
+        //Given
+        Movie movie = new Movie("Titanic", "Romance", 7.0, 1997);              // old
+        MovieRequest request = new MovieRequest("Titanic", "Drama", 7.9, 1997); // new
+        when(movieRepository.findById(1L)).thenReturn(Optional.of(movie));
+        when(movieRepository.save(movie)).thenReturn(movie);
+
+        //When
+        Movie result = movieService.updateMovie(1L, request);
+
+        //Then
+        assertThat(result.getGenre()).isEqualTo("Drama");
+        assertThat(result.getRating()).isEqualTo(7.9);
+    }
+
+
+    @Test
+    void updateMovie_whenMovieNotExists_throwsException(){
+        //Given
+        MovieRequest request = new MovieRequest("Titanic", "Drama", 7.9, 1997);
+        when(movieRepository.findById(999L)).thenReturn(Optional.empty());        
+        
+        //When + Then
+        assertThatThrownBy(() -> movieService.updateMovie(999L, request))
+                                             .isInstanceOf(MovieNotFoundException.class);
+    }
+
 }
