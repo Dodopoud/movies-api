@@ -23,7 +23,22 @@ A REST API for managing a movie collection, built with Spring Boot and PostgreSQ
 | `PUT` | `/movies/{id}` | Update a movie |
 | `DELETE` | `/movies/{id}` | Delete a movie |
 
+## Example Request
+
+`POST /movies`
+
+```json
+{
+  "title": "Spirited Away",
+  "genre": "Animation",
+  "rating": 8.6,
+  "releaseYear": 2001
+}
+```
+
 ## How to Run
+
+**Requirements:** Java 17+ and PostgreSQL
 
 1. Create an empty PostgreSQL database called `movies_db`
 2. Set the database password as an environment variable: `DB_PASSWORD`
