@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import java.util.List;
 import com.dimitra.movies.dto.MovieRequest;
 import com.dimitra.movies.entity.Movie;
 import com.dimitra.movies.exception.MovieNotFoundException;
@@ -121,6 +121,62 @@ class MovieServiceTest {
         assertThat(result.getGenre()).isEqualTo("Animation");
         assertThat(result.getRating()).isEqualTo(8.6);
         assertThat(result.getReleaseYear()).isEqualTo(2001);
+    }
+
+        @Test
+    void search_withGenreAndMinRating_returnsFilteredMovies(){
+        //Given
+        Movie movie = new Movie("The Godfather", "Drama", 9.2, 1972);
+        List<Movie> movies = List.of(movie);
+        when(movieRepository.findByGenreIgnoreCaseAndRatingGreaterThanEqual("Drama", 8.5)).thenReturn(movies);
+
+        //When
+        List<Movie> result = movieService.search("Drama", 8.5);
+
+        //Then
+        assertThat(result).isEqualTo(movies);
+    }
+
+    @Test
+    void search_withGenreOnly_returnsMoviesByGenre(){
+        //Given
+        Movie movie = new Movie("Titanic", "Drama", 7.9, 1997);
+        List<Movie> movies = List.of(movie);
+        when(movieRepository.findByGenreIgnoreCase("Drama")).thenReturn(movies);
+
+        //When
+        List<Movie> result = movieService.search("Drama", null);
+
+        //Then
+        assertThat(result).isEqualTo(movies);
+    }
+
+    @Test
+    void search_withMinRatingOnly_returnsMoviesByRating(){
+        //Given
+        Movie movie = new Movie("Spirited Away", "Animation", 8.6, 2001);
+        List<Movie> movies = List.of(movie);
+        when(movieRepository.findByRatingGreaterThanEqual(8.5)).thenReturn(movies);
+
+        //When
+        List<Movie> result = movieService.search(null, 8.5);
+
+        //Then
+        assertThat(result).isEqualTo(movies);
+    }
+
+    @Test
+    void search_withNoFilters_returnsAllMovies(){
+        //Given
+        Movie movie = new Movie("Toy Story", "Animation", 8.3, 1995);
+        List<Movie> movies = List.of(movie);
+        when(movieRepository.findAll()).thenReturn(movies);
+
+        //When
+        List<Movie> result = movieService.search(null, null);
+
+        //Then
+        assertThat(result).isEqualTo(movies);
     }
 
 }
