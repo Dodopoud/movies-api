@@ -6,15 +6,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.verify;
+
+import com.dimitra.movies.dto.MovieRequest;
 import com.dimitra.movies.entity.Movie;
 import com.dimitra.movies.exception.MovieNotFoundException;
 import com.dimitra.movies.repository.MovieRepository;
-import com.dimitra.movies.dto.MovieRequest;
 
 @ExtendWith(MockitoExtension.class)
 class MovieServiceTest {
@@ -103,6 +105,22 @@ class MovieServiceTest {
         //When + Then
         assertThatThrownBy(() -> movieService.updateMovie(999L, request))
                                              .isInstanceOf(MovieNotFoundException.class);
+    }
+
+    @Test
+    void createMovie_withValidRequest_returnsSavedMovie(){
+        //Given
+        MovieRequest movieRequest = new MovieRequest("Spirited Away", "Animation", 8.6,2001);
+        when (movieRepository.save(any(Movie.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        //When
+        Movie result = movieService.createMovie(movieRequest);
+
+        //Then
+        assertThat(result.getTitle()).isEqualTo("Spirited Away");
+        assertThat(result.getGenre()).isEqualTo("Animation");
+        assertThat(result.getRating()).isEqualTo(8.6);
+        assertThat(result.getReleaseYear()).isEqualTo(2001);
     }
 
 }
