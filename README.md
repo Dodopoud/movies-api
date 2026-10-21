@@ -230,16 +230,6 @@ src/test/java/com/dimitra/movies
 
 ---
 
-## Next Steps
-
-- [x] Custom exceptions (`MovieNotFoundException`)
-- [x] Unit tests for the service and controller layers
-- [ ] Pagination and sorting
-- [ ] A `Review` entity with a one-to-many relationship
-- [ ] A consistent error format for all errors (`ProblemDetail`)
-- [ ] Integration tests
-
----
 
 ## Author
 
