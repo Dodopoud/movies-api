@@ -18,7 +18,7 @@ public class Movie {
     private double rating;
     private int releaseYear;
 
-    protected Movie(){} //τον χρειάζεται κενό το hibernate
+    protected Movie(){} 
 
     public Movie(String title, String genre, double rating, int releaseYear){
         this.title = title;
