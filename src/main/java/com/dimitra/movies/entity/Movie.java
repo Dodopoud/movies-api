@@ -18,7 +18,7 @@ public class Movie {
     private double rating;
     private int releaseYear;
 
-    protected Movie(){} 
+    protected Movie(){} //Empty for Hibernate 
 
     public Movie(String title, String genre, double rating, int releaseYear){
         this.title = title;
