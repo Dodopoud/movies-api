@@ -2,6 +2,8 @@ package com.dimitra.movies.service;
 import org.springframework.stereotype.Service;
 import com.dimitra.movies.repository.ReviewRepository;
 import com.dimitra.movies.entity.Review;
+import com.dimitra.movies.entity.Movie;
+import com.dimitra.movies.dto.ReviewRequest;
 import com.dimitra.movies.exception.ReviewNotFoundException;
 import java.util.List;
 
@@ -29,4 +31,14 @@ public class ReviewService {
         return reviewRepository.findByMovieId(movieId);
 
     }
+
+    public Review createReview(Long movieId, ReviewRequest request){
+        Movie movie = movieService.findById(movieId);
+        Review review = new Review(request.rating(),
+                                    request.comment(),
+                                    movie );
+    return reviewRepository.save(review);
+
+    }
 }
+
