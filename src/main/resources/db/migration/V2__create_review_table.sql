@@ -1,0 +1,7 @@
+CREATE TABLE review(
+    id BIGSERIAL PRIMARY KEY, 
+    rating INTEGER NOT NULL CHECK (rating >= 0 AND rating <= 10), 
+    comment TEXT ,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    movie_id BIGINT NOT NULL REFERENCES movie(id) ON DELETE CASCADE
+);
