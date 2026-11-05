@@ -18,7 +18,7 @@ public class Movie {
     private double rating;
     private int releaseYear;
 
-    protected Movie(){} //τον χρειάζεται κενό το hibernate
+    protected Movie(){} //empty for Hibernate, protected so you don't use it as a public Constructor
 
     public Movie(String title, String genre, double rating, int releaseYear){
         this.title = title;

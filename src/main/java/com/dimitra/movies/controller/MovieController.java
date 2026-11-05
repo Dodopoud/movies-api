@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,7 @@ import com.dimitra.movies.service.MovieService;
 
 import jakarta.validation.Valid;
 
+@RequestMapping("/movies")
 @RestController
 public class MovieController {
     private final MovieService movieService;
@@ -27,33 +29,33 @@ public class MovieController {
     public MovieController (MovieService movieService){
         this.movieService = movieService;    }
 
-    @GetMapping("/movies")
+    @GetMapping
     public List<MovieResponse> getMovies(@RequestParam (required = false) String genre,
                                          @RequestParam(required = false) Double minRating){
     
           return movieService.search(genre, minRating).stream().map(MovieResponse::from).toList();                                  
     }
 
-    @GetMapping("/movies/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<MovieResponse> getMovieById(@PathVariable Long id){
         Movie movie = movieService.findById(id);
      
         return ResponseEntity.ok(MovieResponse.from(movie));
     }
 
-    @DeleteMapping("/movies/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMovieById(@PathVariable Long id){
         movieService.deleteMovieById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/movies")
+    @PostMapping
     public ResponseEntity<MovieResponse> createMovie(@Valid @RequestBody MovieRequest request){
         Movie saved = movieService.createMovie(request); 
         return ResponseEntity.status(HttpStatus.CREATED).body(MovieResponse.from(saved));
     }
 
-    @PutMapping("/movies/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<MovieResponse> updateMovie(@PathVariable Long id, @Valid @RequestBody MovieRequest request){
         
         Movie updated = movieService.updateMovie(id, request);
