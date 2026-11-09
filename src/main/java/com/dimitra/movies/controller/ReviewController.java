@@ -39,7 +39,15 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ReviewResponse.from(saved));
     }
 
-
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Void> deleteReview(@PathVariable Long movieId, @PathVariable Long reviewId){
+        reviewService.deleteReviewById(movieId, reviewId);
+        return ResponseEntity.noContent().build();
+    }
     
-
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<ReviewResponse> updateReview(@PathVariable Long movieId, @PathVariable Long reviewId, @Valid @RequestBody ReviewRequest request){
+        Review updated = reviewService.updateReview(movieId, reviewId, request);
+        return ResponseEntity.ok(ReviewResponse.from(updated)); 
+    }
 }

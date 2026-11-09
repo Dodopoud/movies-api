@@ -1,11 +1,13 @@
 package com.dimitra.movies.service;
-import org.springframework.stereotype.Service;
-import com.dimitra.movies.repository.ReviewRepository;
-import com.dimitra.movies.entity.Review;
-import com.dimitra.movies.entity.Movie;
-import com.dimitra.movies.dto.ReviewRequest;
-import com.dimitra.movies.exception.ReviewNotFoundException;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.dimitra.movies.dto.ReviewRequest;
+import com.dimitra.movies.entity.Movie;
+import com.dimitra.movies.entity.Review;
+import com.dimitra.movies.exception.ReviewNotFoundException;
+import com.dimitra.movies.repository.ReviewRepository;
 
 @Service
 public class ReviewService {
@@ -38,7 +40,31 @@ public class ReviewService {
                                     request.comment(),
                                     movie );
     return reviewRepository.save(review);
+ 
+    }
 
+    public void deleteReviewById(Long movieId, Long reviewId){
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundException(reviewId));
+
+        if (!review.getMovie().getId().equals(movieId)) {
+            throw new ReviewNotFoundException(reviewId);
+        }
+
+        reviewRepository.delete(review);
+        
+    }
+
+    public Review updateReview(Long movieId, Long reviewId, ReviewRequest request){
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundException(reviewId));
+
+        if(!review.getMovie().getId().equals(movieId)){
+            throw new ReviewNotFoundException(reviewId);
+        }
+        review.setRating(request.rating());
+        review.setComment(request.comment());
+
+        return reviewRepository.save(review);
+       
     }
 }
 
