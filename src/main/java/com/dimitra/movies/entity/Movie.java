@@ -18,7 +18,11 @@ public class Movie {
     private double rating;
     private int releaseYear;
 
+<<<<<<< HEAD
+    protected Movie(){} //empty for Hibernate, protected so you don't use it as a public Constructor
+=======
     protected Movie(){} //Empty for Hibernate 
+>>>>>>> 4c598e14a6b33b9c9fb6aec0c8c96e12e3fd945d
 
     public Movie(String title, String genre, double rating, int releaseYear){
         this.title = title;
