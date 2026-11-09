@@ -230,7 +230,10 @@ src/test/java/com/dimitra/movies
 
 ---
 
+<<<<<<< HEAD
 ---
+=======
+>>>>>>> 4c598e14a6b33b9c9fb6aec0c8c96e12e3fd945d
 
 ## Author
 
